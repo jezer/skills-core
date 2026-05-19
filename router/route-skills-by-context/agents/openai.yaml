@@ -1,0 +1,5 @@
+name: route-skills-by-context
+description: Eleger skills executoras por contexto e tipo de atividade.
+instructions:
+  default_prompt: "Use $route-skills-by-context no inicio da sessao e antes de cada bloco de mudanca persistente para eleger skills basicas, de empresa, de projeto e globais de apoio."
+

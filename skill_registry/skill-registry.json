@@ -1,0 +1,267 @@
+﻿{
+    "generated_at":  "2026-05-18T20:47:51",
+    "source":  "C:\\codes\\skills",
+    "items":  [
+                  {
+                      "name":  "architecture-diagrammer",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "products",
+                      "path":  "C:\\codes\\skills\\architecture-diagrammer",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "cloudinformation-aws",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "services",
+                      "path":  "C:\\codes\\skills\\cloudinformation-aws",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "configure-machine-default-skill",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "disciplines",
+                      "path":  "C:\\codes\\skills\\configure-machine-default-skill",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "connect-github-gitlab",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\connect-github-gitlab",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "connect-secondary-machine-git",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\connect-secondary-machine-git",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "excel-validation-specialist",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "disciplines",
+                      "path":  "C:\\codes\\skills\\excel-validation-specialist",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "maintain-activities",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\maintain-activities",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "maintain-agents",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "disciplines",
+                      "path":  "C:\\codes\\skills\\maintain-agents",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "maintain-automations",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "disciplines",
+                      "path":  "C:\\codes\\skills\\maintain-automations",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "maintain-filesystem",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "disciplines",
+                      "path":  "C:\\codes\\skills\\maintain-filesystem",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "maintain-git",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\maintain-git",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "maintain-planner",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\maintain-planner",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "maintain-skills",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\maintain-skills",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "maintain-tickets",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\maintain-tickets",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "periodic-skills-reviewer",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\periodic-skills-reviewer",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "powershell-specialist",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "languages",
+                      "path":  "C:\\codes\\skills\\powershell-specialist",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "presentation-designer",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "products",
+                      "path":  "C:\\codes\\skills\\presentation-designer",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "python-specialist",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "languages",
+                      "path":  "C:\\codes\\skills\\python-specialist",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "redshift-sql-specialist",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "languages",
+                      "path":  "C:\\codes\\skills\\redshift-sql-specialist",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "register-ticket-session",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\register-ticket-session",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "route-skills-by-context",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\route-skills-by-context",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "syg-cloudformation-aws",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "services",
+                      "path":  "C:\\codes\\skills\\syg-cloudformation-aws",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "syg-rebates-parameterization",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "disciplines",
+                      "path":  "C:\\codes\\skills\\syg-rebates-parameterization",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "syg-unit-test-specialist",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "disciplines",
+                      "path":  "C:\\codes\\skills\\syg-unit-test-specialist",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "syg-workflows-user-zone",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "services",
+                      "path":  "C:\\codes\\skills\\syg-workflows-user-zone",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "sync-repositories-index",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "tools",
+                      "path":  "C:\\codes\\skills\\sync-repositories-index",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "technical-writer",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "products",
+                      "path":  "C:\\codes\\skills\\technical-writer",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "ui-infographic-generator",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "products",
+                      "path":  "C:\\codes\\skills\\ui-infographic-generator",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  },
+                  {
+                      "name":  "visual-storytelling",
+                      "owner":  "maintain-skills",
+                      "status":  "active",
+                      "domain":  "products",
+                      "path":  "C:\\codes\\skills\\visual-storytelling",
+                      "conflict_policy":  "single-purpose-required",
+                      "correlation_skill":  "route-skills-by-context"
+                  }
+              ]
+}

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Manter Skills"
+  short_description: "Cria e revisa skills locais"
+  default_prompt: "Use $maintain-skills para criar, revisar ou validar skills em C:\\codes\\skills."
+

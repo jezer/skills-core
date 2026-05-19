@@ -1,0 +1,5 @@
+interface:
+  display_name: "Manter Planejador"
+  short_description: "Mantem planos e criterios"
+  default_prompt: "Use $maintain-planner para criar, revisar ou validar planos antes de implementar."
+

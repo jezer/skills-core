@@ -1,0 +1,5 @@
+interface:
+  display_name: "Manter Atividades"
+  short_description: "Mantem atividades de planos"
+  default_prompt: "Use $maintain-activities para criar, atualizar ou verificar atividades dentro de planos."
+

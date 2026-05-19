@@ -1,0 +1,382 @@
+﻿{
+    "generated_at":  "2026-05-18T20:47:51",
+    "graph":  [
+                  {
+                      "skill":  "architecture-diagrammer",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "cloudinformation-aws",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "configure-machine-default-skill",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "connect-github-gitlab",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "connect-secondary-machine-git",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "excel-validation-specialist",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "maintain-activities",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "maintain-agents",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "maintain-automations",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "maintain-filesystem",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "maintain-git",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "maintain-planner",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "maintain-skills",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "maintain-tickets",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "periodic-skills-reviewer",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "powershell-specialist",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "presentation-designer",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "python-specialist",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "redshift-sql-specialist",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "register-ticket-session",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "route-skills-by-context",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "syg-cloudformation-aws",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "syg-rebates-parameterization",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "syg-unit-test-specialist",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "syg-workflows-user-zone",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "sync-repositories-index",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "technical-writer",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "ui-infographic-generator",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  },
+                  {
+                      "skill":  "visual-storytelling",
+                      "depends_on":  [
+                                         "route-skills-by-context"
+                                     ],
+                      "optional_support":  [
+                                               "maintain-activities",
+                                               "maintain-planner"
+                                           ],
+                      "conflict_with":  [
+
+                                        ]
+                  }
+              ]
+}

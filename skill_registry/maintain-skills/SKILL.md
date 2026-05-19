@@ -1,0 +1,87 @@
+---
+name: maintain-skills
+description: Manter skills locais do workspace C:\codes somente quando o usuario solicitar explicitamente. Use para criar, revisar, mover, organizar ou validar skills em C:\codes\skills; processar sessoes pendentes relacionadas a manutencao de skills; mover sessoes concluidas para feitas; garantir que C:\Users mantenha somente a ponte global minima; ou coordenar `maintain-automations` quando atividades repetitivas puderem virar scripts, templates, assets ou referencias parametrizadas.
+---
+
+# Manter Skills
+
+## Objetivo
+
+Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
+
+## Uso
+
+1. Usar somente quando o usuario solicitar manutencao de skills.
+2. Nao invocar automaticamente para tarefas comuns.
+3. Processar apenas sessoes pendentes relacionadas a manutencao de skills.
+4. Usar para alinhar skills com autonomia por contexto quando o usuario pedir atualizar principios de skills.
+
+## Limites
+
+1. Nao criar skills reais em `C:\Users\jezer.santos_nowvert\.codex\skills`.
+2. Nao carregar todas as skills por padrao.
+3. Nao transformar `SKILL.md` em documentacao longa.
+4. Nao criar arquivos auxiliares sem ganho operacional real.
+5. Nao fazer skill alterar outro contexto diretamente; registrar pedido no `plan` do contexto dono quando necessario.
+6. Nao apontar skill para tool global inexistente como dependencia obrigatoria.
+7. Nao permitir que uma skill assuma proposito de outra skill ja existente.
+8. Nao permitir que skills criem/editem planos diretamente fora da skill `maintain-planner`.
+9. Nao criar skill fora do contexto dono (projeto, empresa ou root) definido para a manutencao.
+
+## Fluxo
+
+1. Ler `C:\codes\AGENTS.md`.
+2. Ler `C:\codes\skills\AGENTS.md`.
+3. Executar `route-skills-by-context` antes de qualquer mudanca persistente de skill e registrar na sessao ativa.
+4. Criar skills reais somente em `C:\codes\skills`.
+5. Manter em `C:\Users\jezer.santos_nowvert\.codex\skills` somente a ponte global minima `usar-codes-agents`, alem de pastas internas do sistema.
+6. Escrever `SKILL.md` com frontmatter contendo somente `name` e `description`.
+7. Manter o corpo da skill curto e operacional.
+8. Validar toda skill alterada com `quick_validate.py`.
+9. Ao concluir, completar a sessao pendente relacionada e mover para `sessoes/feitas/NNN.md`.
+10. Para validar todas as skills locais, usar `scripts/validate-skills.ps1`.
+11. Quando a atividade for repetitiva e mudar apenas parametros, usar `maintain-automations`.
+12. Quando uma skill precisar de artefatos extensos ou reutilizaveis, planejar tool em `C:\codes\tools` e manter a skill curta.
+13. Para gerar ou validar indices auxiliares de descoberta de skills, usar `scripts/atualizar-indices-skills.ps1`.
+14. Depois de alterar skill oficial, revisar impacto em `C:\\codes\\skills\\dist\\gemini` e na ponte minima do Codex para evitar divergencia de referencia.
+15. Rodar `scripts/sincronizar-skills-ia.ps1` como pos-update para verificar consistencia minima entre skills oficiais, camada `gemini` e ponte global do Codex.
+16. Ao final de toda manutencao de skills, executar sempre `scripts/finalizar-manutencao-skills.ps1` como comando unico de fechamento, sem perguntar confirmacao intermediaria.
+
+## Regras
+
+1. Atualizar skill existente quando a responsabilidade ja existir.
+2. Criar skill nova apenas para atividade recorrente e bem delimitada.
+3. Evitar duplicar regras que ja vivem em `AGENTS.md` ou em outra skill dona.
+4. Nao criar sessao nova por conta propria quando nao houver pendente aberta para a atividade.
+5. Preferir script, template ou asset dentro da skill dona quando o reaproveitamento depender apenas de parametros.
+6. Preferir tool global para artefatos compartilhados entre contextos, depois de existir contrato aprovado em `C:\codes\tools`.
+7. Se a melhoria de skill depender de outro contexto, registrar pedido no `plan` desse contexto.
+8. Se nao houver skill aderente para uma execucao persistente, planejar a criacao ou revisao da skill antes da execucao.
+9. Sempre registrar como a sincronizacao Gemini/Codex foi tratada apos mudanca de skill (sem exigir duplicacao indevida de conteudo).
+10. Quando o usuario pedir para "fazer sempre" o fechamento de qualidade, aplicar diretamente o comando unico final sem solicitar confirmacao extra.
+11. Skills novas ou revisadas devem existir somente no contexto dono da demanda: projeto especifico, empresa especifica ou root.
+12. Se a demanda de skill nao tiver contexto dono explicito, bloquear mudanca persistente ate definir se o destino e projeto, empresa ou root.
+13. Qualquer movimento, renomeacao ou reorganizacao de pastas de skills exige obrigatoriamente:
+   - atualizar indices em `C:\codes\skills\indices`;
+   - revisar/atualizar referencias de caminho em scripts, workflows, planos e `AGENTS.md`;
+   - rodar validacao completa (`validate-skills`, indices e sincronizador multi-IA) antes de concluir.
+
+## Scripts
+
+1. `scripts/validate-skills.ps1`: valida todos os diretorios em `C:\codes\skills` que possuem `SKILL.md`.
+2. `scripts/atualizar-indices-skills.ps1`: gera ou valida indices auxiliares em `C:\codes\skills\indices`.
+3. Quando necessario, usar `configure-machine-default-skill` para validar a ponte global minima do Codex.
+4. `scripts/sincronizar-skills-ia.ps1`: checa equivalencia basica entre `C:\codes\skills` e `C:\\codes\\skills\\dist\\gemini` e valida referencias da ponte global do Codex.
+5. `scripts/finalizar-manutencao-skills.ps1`: comando unico final que executa validacao de skills, validacao de indices e sincronizacao IA em sequencia.
+
+
+## Correlacao Obrigatoria de Skills
+
+1. Antes de qualquer mudanca persistente, executar `route-skills-by-context`.
+2. Registrar na sessao ativa:
+- skill executora
+- skills de apoio
+- motivo da escolha
+- validacao da escolha
+3. Sem esse registro, manter atividade como `bloqueado`.
+
