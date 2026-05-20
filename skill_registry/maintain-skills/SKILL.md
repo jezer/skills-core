@@ -44,8 +44,9 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 12. Quando uma skill precisar de artefatos extensos ou reutilizaveis, planejar tool em `C:\codes\tools` e manter a skill curta.
 13. Para gerar ou validar indices auxiliares de descoberta de skills, usar `scripts/atualizar-indices-skills.ps1`.
 14. Depois de alterar skill oficial, revisar impacto em todos os destinos dist (`gemini`, `copilot`, `claude`, `codex`) e na ponte global do Codex (`codex_global`) para evitar divergencia de referencia.
-15. Rodar `scripts/sincronizar-skills-ia.ps1` (sem `-Apply`) para verificar inconsistencias entre skills oficiais e os destinos; rodar com `-Apply` para copiar efetivamente `SKILL.md`, `agents/` e `scripts/` para `dist/gemini`, `dist/copilot`, `dist/claude`, `dist/codex` e `~/.codex/skills`.
-16. Ao final de toda manutencao de skills, executar sempre `scripts/finalizar-manutencao-skills.ps1` como comando unico de fechamento, sem perguntar confirmacao intermediaria.
+15. Depois de criar/alterar skills, executar obrigatoriamente `scripts/validate-skills.ps1` para validar todas as skills do workspace antes de qualquer sincronizacao multi-IA.
+16. Rodar `scripts/sincronizar-skills-ia.ps1` (sem `-Apply`) para verificar inconsistencias entre skills oficiais e os destinos; rodar com `-Apply` para copiar efetivamente `SKILL.md`, `agents/` e `scripts/` para `dist/gemini`, `dist/copilot`, `dist/claude`, `dist/codex` e `~/.codex/skills` somente apos validacao completa aprovada.
+17. Ao final de toda manutencao de skills, executar sempre `scripts/finalizar-manutencao-skills.ps1` como comando unico de fechamento, sem perguntar confirmacao intermediaria.
 
 ## Regras
 
@@ -65,6 +66,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
    - atualizar indices em `C:\codes\skills\indices`;
    - revisar/atualizar referencias de caminho em scripts, workflows, planos e `AGENTS.md`;
    - rodar validacao completa (`validate-skills`, indices e sincronizador multi-IA) antes de concluir.
+14. Ordem obrigatoria de fechamento de manutencao de skill: `validar skills` -> `validar indices` -> `sincronizar IA`; nunca sincronizar IA antes da validacao das skills.
 
 ## Scripts
 
@@ -72,7 +74,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 2. `scripts/atualizar-indices-skills.ps1`: gera ou valida indices auxiliares em `C:\codes\skills\indices`.
 3. Quando necessario, usar `configure-machine-default-skill` para validar a ponte global minima do Codex.
 4. `scripts/sincronizar-skills-ia.ps1`: sem `-Apply` exibe divergencias (missing/extras) entre skills oficiais e os 5 destinos (gemini, copilot, claude, codex, codex_global) e valida a ponte Codex; com `-Apply` copia todos os arquivos (`SKILL.md`, `agents/`, `scripts/`) para cada destino.
-5. `scripts/finalizar-manutencao-skills.ps1`: comando unico final que executa validacao de skills, validacao de indices e sincronizacao IA em sequencia.
+5. `scripts/finalizar-manutencao-skills.ps1`: comando unico final e obrigatorio, executando nesta ordem: validacao de skills, validacao de indices e sincronizacao IA.
 
 
 ## Correlacao Obrigatoria de Skills
@@ -84,4 +86,3 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 - motivo da escolha
 - validacao da escolha
 3. Sem esse registro, manter atividade como `bloqueado`.
-
