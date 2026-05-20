@@ -18,7 +18,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 
 ## Limites
 
-1. Nao criar skills reais em `C:\Users\jezer.santos_nowvert\.codex\skills`.
+1. Nao criar skills reais em `C:\Users\jezer.santos_nowvert\.codex\skills` nem em `C:\Users\jezer.santos_nowvert\.claude\skills`; esses diretorios sao pontes globais minimas ou nao existem para skills de workspace.
 2. Nao carregar todas as skills por padrao.
 3. Nao transformar `SKILL.md` em documentacao longa.
 4. Nao criar arquivos auxiliares sem ganho operacional real.
@@ -33,7 +33,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 1. Ler `C:\codes\AGENTS.md`.
 2. Ler `C:\codes\skills\AGENTS.md`.
 3. Executar `route-skills-by-context` antes de qualquer mudanca persistente de skill e registrar na sessao ativa.
-4. Criar skills reais somente em `C:\codes\skills`.
+4. Criar skills reais somente em `C:\codes\skills`, dentro do subdiretorio de dominio correto (`core/`, `domains/`, `generators/`, `synchronizers/`); nunca criar SKILL.md diretamente na raiz de `C:\codes\skills`.
 5. Manter em `C:\Users\jezer.santos_nowvert\.codex\skills` somente a ponte global minima `usar-codes-agents`, alem de pastas internas do sistema.
 6. Escrever `SKILL.md` com frontmatter contendo somente `name` e `description`.
 7. Manter o corpo da skill curto e operacional.
@@ -43,8 +43,8 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 11. Quando a atividade for repetitiva e mudar apenas parametros, usar `maintain-automations`.
 12. Quando uma skill precisar de artefatos extensos ou reutilizaveis, planejar tool em `C:\codes\tools` e manter a skill curta.
 13. Para gerar ou validar indices auxiliares de descoberta de skills, usar `scripts/atualizar-indices-skills.ps1`.
-14. Depois de alterar skill oficial, revisar impacto em `C:\\codes\\skills\\dist\\gemini` e na ponte minima do Codex para evitar divergencia de referencia.
-15. Rodar `scripts/sincronizar-skills-ia.ps1` como pos-update para verificar consistencia minima entre skills oficiais, camada `gemini` e ponte global do Codex.
+14. Depois de alterar skill oficial, revisar impacto em todos os destinos dist (`gemini`, `copilot`, `claude`, `codex`) e na ponte global do Codex (`codex_global`) para evitar divergencia de referencia.
+15. Rodar `scripts/sincronizar-skills-ia.ps1` (sem `-Apply`) para verificar inconsistencias entre skills oficiais e os destinos; rodar com `-Apply` para copiar efetivamente `SKILL.md`, `agents/` e `scripts/` para `dist/gemini`, `dist/copilot`, `dist/claude`, `dist/codex` e `~/.codex/skills`.
 16. Ao final de toda manutencao de skills, executar sempre `scripts/finalizar-manutencao-skills.ps1` como comando unico de fechamento, sem perguntar confirmacao intermediaria.
 
 ## Regras
@@ -57,7 +57,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 6. Preferir tool global para artefatos compartilhados entre contextos, depois de existir contrato aprovado em `C:\codes\tools`.
 7. Se a melhoria de skill depender de outro contexto, registrar pedido no `plan` desse contexto.
 8. Se nao houver skill aderente para uma execucao persistente, planejar a criacao ou revisao da skill antes da execucao.
-9. Sempre registrar como a sincronizacao Gemini/Codex foi tratada apos mudanca de skill (sem exigir duplicacao indevida de conteudo).
+9. Sempre registrar como a sincronizacao multi-IA (gemini, copilot, claude, codex, codex_global) foi tratada apos mudanca de skill (sem exigir duplicacao indevida de conteudo).
 10. Quando o usuario pedir para "fazer sempre" o fechamento de qualidade, aplicar diretamente o comando unico final sem solicitar confirmacao extra.
 11. Skills novas ou revisadas devem existir somente no contexto dono da demanda: projeto especifico, empresa especifica ou root.
 12. Se a demanda de skill nao tiver contexto dono explicito, bloquear mudanca persistente ate definir se o destino e projeto, empresa ou root.
@@ -71,7 +71,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 1. `scripts/validate-skills.ps1`: valida todos os diretorios em `C:\codes\skills` que possuem `SKILL.md`.
 2. `scripts/atualizar-indices-skills.ps1`: gera ou valida indices auxiliares em `C:\codes\skills\indices`.
 3. Quando necessario, usar `configure-machine-default-skill` para validar a ponte global minima do Codex.
-4. `scripts/sincronizar-skills-ia.ps1`: checa equivalencia basica entre `C:\codes\skills` e `C:\\codes\\skills\\dist\\gemini` e valida referencias da ponte global do Codex.
+4. `scripts/sincronizar-skills-ia.ps1`: sem `-Apply` exibe divergencias (missing/extras) entre skills oficiais e os 5 destinos (gemini, copilot, claude, codex, codex_global) e valida a ponte Codex; com `-Apply` copia todos os arquivos (`SKILL.md`, `agents/`, `scripts/`) para cada destino.
 5. `scripts/finalizar-manutencao-skills.ps1`: comando unico final que executa validacao de skills, validacao de indices e sincronizacao IA em sequencia.
 
 
