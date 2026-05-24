@@ -1,60 +1,117 @@
 ---
 name: maintain-planner
-description: Criar, revisar ou validar planos antes de implementacoes persistentes no workspace C:\codes. Use quando Codex precisar organizar objetivo, escopo, fora de escopo, atividades, dependencias, riscos, skills recomendadas e criterios de aceite; ou quando uma implementacao ainda nao tiver plano claro conforme C:\codes\tools\planejador.
+description: Gerencia o ciclo de vida de planos no workspace C:\codes - cria pasta numerada NNNNNN-titulo-kebab, mantem indice por usuario (jz, jf) em C:\codes\plan\indice-planos-{usuario}.json com apenas planos em-andamento, e move para concluido/ ao fim. Use quando criar, iniciar, concluir ou listar planos; revisar estrutura de plan/; ou atribuir o proximo numero de plano. A skill e a dona da numeracao global e do indice.
 ---
 
 # Manter Planejador
 
 ## Objetivo
 
-Criar e revisar planos verificaveis antes de implementacoes persistentes.
+Manter o ciclo de vida de planos verificaveis no workspace `C:\codes`. A skill e dona da numeracao global de planos, da estrutura de pasta `NNNNNN-titulo-kebab/` em qualquer `plan/` e do indice por usuario em `C:\codes\plan\indice-planos-{usuario}.json`.
+
+## Conceitos
+
+- **Numero de plano**: inteiro sequencial global no workspace, formatado com 6 digitos (`000001`, `000002`, ...). Unico entre todos os `plan/`.
+- **Pasta de plano**: `NNNNNN-titulo-kebab/` dentro do `plan/` do contexto dono.
+- **Indice por usuario**: `C:\codes\plan\indice-planos-{usuario}.{json,md}` lista apenas planos `em-andamento`. Quando o plano fica `concluido` ou `descartado`, sai do indice.
+- **Concluido**: plano arquivado em `{plan_dir}/concluido/NNNNNN-titulo-kebab/`.
+
+## Estrutura padrao
+
+```
+{contexto}/plan/
+  NNNNNN-titulo-kebab/             <- plano em-andamento
+    plano.md
+    atividades.md (opcional)
+    materiais/ (opcional)
+  concluido/
+    NNNNNN-titulo-kebab/
+      plano.md ...
+```
+
+Contexto pode ser root (`C:\codes\plan`), empresa (`C:\codes\{empresa}\plan`), projeto (`C:\codes\{empresa}\{projeto}\plan`), skill (`C:\codes\skills\plan`), tool (`C:\codes\tools\{tool}\plan`).
+
+## Indice por usuario (`indice-planos-{usuario}.json`)
+
+```json
+{
+  "generated_at": "2026-05-24T12:00:00-03:00",
+  "workspace_root": "C:/codes",
+  "usuario": "jz",
+  "em_andamento_total": 1,
+  "proximo_numero": 39,
+  "planos": [
+    {
+      "numero": "000001",
+      "titulo": "controle de planos",
+      "caminho": "C:/codes/plan/000001-controle-de-planos",
+      "dono": "root",
+      "empresa": null,
+      "projeto": null,
+      "skill": "maintain-planner",
+      "prioridade": 1,
+      "status": "em-andamento",
+      "criado_em": "2026-05-24",
+      "atualizado_em": "2026-05-24",
+      "chamado": "SKILLS-JZ-CH-2026-00008",
+      "skills_relacionadas": ["maintain-planner", "route-skills-by-context"]
+    }
+  ]
+}
+```
+
+Regras:
+
+1. `proximo_numero` e sempre `max(numero) + 1` considerando **todos os planos do workspace** (em-andamento + concluidos + descartados).
+2. `planos[]` lista **apenas** os com `status: em-andamento`.
+3. Indice e regenerado por `scripts/atualizar-indice-planos.ps1` apos qualquer criar/iniciar/concluir.
+
+## Status de plano
+
+| Status | Onde fica | No indice? |
+|---|---|---|
+| `em-andamento` | `{plan_dir}/NNNNNN-.../` | sim |
+| `concluido` | `{plan_dir}/concluido/NNNNNN-.../` | nao |
+| `descartado` | `{plan_dir}/descartado/NNNNNN-.../` | nao |
 
 ## Uso
 
-1. Usar quando o usuario pedir plano, planejamento ou revisao de plano.
-2. Usar antes de implementar mudancas persistentes sem plano claro.
-3. Usar para validar se atividades possuem escopo, criterio de aceite e skills recomendadas.
-4. Usar para registrar pedidos no `plan` do contexto dono quando uma necessidade afetar outro contexto.
-5. Usar para interromper execucao persistente quando nao houver skill aderente, contexto dono claro ou criterio de aceite.
-6. Usar para exigir roteamento explicito de skills por atividade antes da implementacao persistente.
-7. Usar como skill obrigatoria para qualquer criacao, edicao ou validacao de arquivos de plano.
+1. **Criar plano novo**: `scripts/criar-plano.ps1 -Titulo "meu plano" -Dono root|<empresa>|<empresa>/<projeto>|skill|tools/<tool>`. Pega o proximo numero, cria pasta, gera `plano.md` template, regenera indice do usuario corrente.
+2. **Iniciar plano existente** (mudar status -> em-andamento): `scripts/iniciar-plano.ps1 -Numero NNNNNN`.
+3. **Concluir plano**: `scripts/concluir-plano.ps1 -Numero NNNNNN`. Move para `concluido/NNNNNN-.../` e regenera indice.
+4. **Regenerar indice manualmente**: `scripts/atualizar-indice-planos.ps1 [-Usuario jz|jf]`.
 
 ## Limites
 
-1. Nao implementar atividades durante revisao de plano, salvo pedido explicito.
-2. Nao duplicar regras completas de `root`, `skills` ou projetos.
-3. Nao marcar atividade como feita sem evidencia verificavel.
-4. Nao planejar alteracao direta em outro contexto sem indicar o `plan` do contexto dono.
-5. Nao tratar tool global como existente antes de haver plano aprovado e pasta criada.
-6. Nao atribuir a uma skill o proposito de outra skill ja existente.
-7. Nao permitir plano criado fora da pasta `plan` do contexto dono (projeto, empresa ou root), salvo regra especifica mais restritiva no contexto.
+1. Nao criar plano fora do `plan/` do contexto dono.
+2. Nao reutilizar numero (mesmo apos descartar).
+3. Nao criar plano em-andamento sem chamado ativo vinculado (`chamado` no frontmatter).
+4. Nao manter no indice planos concluidos/descartados.
+5. Nao mover plano de uma pasta `plan/` para outra (numero acompanha contexto dono).
+6. Nao criar regras de planejamento fora desta skill; tools sao apoio.
+7. Nao concluir plano com atividades pendentes sem registrar excecao na sessao.
 
 ## Fluxo
 
-1. Ler `C:\codes\AGENTS.md`.
-2. Ler `C:\codes\tools\planejador\AGENTS.md`.
-3. Confirmar chamado ativo.
-4. Executar `route-skills-by-context` como etapa obrigatoria e registrar skills candidatas, skill executora, skills de apoio e motivo da escolha na sessao ativa.
-5. Verificar se existe plano aplicavel.
-6. Definir o contexto dono do plano (projeto, empresa ou root) e garantir escrita em `plan/` desse contexto.
-7. Criar ou revisar plano com objetivo, escopo, fora de escopo, atividades, dependencias, riscos e criterios de aceite.
-8. Indicar skills recomendadas atuais e skills futuras relacionadas quando aplicavel.
-9. Validar o plano antes de recomendar implementacao.
-10. Se a atividade afetar outro contexto, criar pedido no `plan` do contexto dono e manter o contexto solicitante somente como origem da necessidade.
-11. Quando o plano envolver tools, usar `C:\codes\tools` como contexto dono e deixar claro que tools sao artefatos de apoio, nao skills.
-12. Toda atividade executavel deve registrar: skills candidatas, skill executora, skills de apoio e motivo da escolha.
+1. Ler `C:\codes\AGENTS.md` e `C:\codes\tools\planejador\AGENTS.md`.
+2. Confirmar chamado ativo.
+3. Executar `route-skills-by-context` e registrar na sessao ativa.
+4. Decidir contexto dono do plano (root, empresa, projeto, skill, tool).
+5. Para criar: chamar `criar-plano.ps1`; para concluir: `concluir-plano.ps1`.
+6. Validar plano com `scripts/validar-plano.ps1`.
+7. Indice e regenerado automaticamente; conferir `em_andamento_total` e `proximo_numero`.
+8. Toda atividade executavel deve registrar: skills candidatas, skill executora, skills de apoio, motivo.
 
 ## Scripts
 
-1. `scripts/validar-plano.ps1`: valida estrutura minima de um plano Markdown.
-
+1. `scripts/validar-plano.ps1`: valida estrutura minima de um `plano.md`.
+2. `scripts/criar-plano.ps1 -Titulo <titulo> -Dono <root|empresa|empresa/projeto|skill|tools/tool> [-Prioridade N] [-Chamado <id>]`: aloca proximo numero, cria pasta, gera template `plano.md`, regenera indice.
+3. `scripts/iniciar-plano.ps1 -Numero <NNNNNN>`: muda status do plano para em-andamento e regenera indice.
+4. `scripts/concluir-plano.ps1 -Numero <NNNNNN>`: move pasta para `concluido/` e regenera indice.
+5. `scripts/atualizar-indice-planos.ps1 [-Usuario <jz|jf>]`: varre todo o workspace, monta indice JSON+MD, salva em `C:\codes\plan\indice-planos-<usuario>.{json,md}`.
 
 ## Correlacao Obrigatoria de Skills
 
 1. Antes de qualquer mudanca persistente, executar `route-skills-by-context`.
-2. Registrar na sessao ativa:
-- skill executora
-- skills de apoio
-- motivo da escolha
-- validacao da escolha
+2. Registrar na sessao ativa skill executora, skills de apoio, motivo da escolha e validacao.
 3. Sem esse registro, manter atividade como `bloqueado`.
