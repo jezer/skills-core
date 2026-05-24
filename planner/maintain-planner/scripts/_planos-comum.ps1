@@ -15,7 +15,10 @@ function Get-CurrentUser {
 
 function To-KebabCase {
     param([string]$Text)
-    $t = $Text.ToLower()
+    $t = $Text.Normalize([Text.NormalizationForm]::FormD)
+    $t = -join ($t.ToCharArray() | Where-Object { [Globalization.CharUnicodeInfo]::GetUnicodeCategory($_) -ne [Globalization.UnicodeCategory]::NonSpacingMark })
+    $t = [Text.RegularExpressions.Regex]::Replace($t, "([a-z0-9])([A-Z])", '$1-$2').ToLower()
+    $t = $t -replace "_", "-"
     $t = [Text.RegularExpressions.Regex]::Replace($t, "[^a-z0-9\s\-]", "")
     $t = [Text.RegularExpressions.Regex]::Replace($t, "\s+", "-")
     $t = [Text.RegularExpressions.Regex]::Replace($t, "-+", "-")
@@ -71,9 +74,9 @@ function Find-AllPlanFolders {
 }
 
 function Get-NextPlanNumber {
-    $all = Find-AllPlanFolders
-    if (-not $all -or $all.Count -eq 0) { return 1 }
-    $max = ($all | ForEach-Object { [int]$_.Numero } | Measure-Object -Maximum).Maximum
+    $all = @(Find-AllPlanFolders)
+    if ($all.Count -eq 0) { return 1 }
+    $max = [int]((($all | ForEach-Object { [int]$_.Numero }) | Measure-Object -Maximum).Maximum)
     return ($max + 1)
 }
 
@@ -84,10 +87,15 @@ function Format-PlanNumber {
 
 function Resolve-DonoFromPath {
     param([string]$PlanDirPath)
-    $rel = [System.IO.Path]::GetRelativePath($script:WorkspaceRoot, $PlanDirPath)
+    $base = $script:WorkspaceRoot.TrimEnd('\','/') + '\'
+    $full = $PlanDirPath
+    if ($full.StartsWith($base, [System.StringComparison]::OrdinalIgnoreCase)) {
+        $rel = $full.Substring($base.Length)
+    } else {
+        $rel = $full
+    }
     $rel = $rel.Replace('\','/')
     if ($rel -ieq "plan") { return "root" }
-    # remover trailing /plan
     $rel = $rel -replace "/plan$", ""
     return $rel
 }

@@ -8,9 +8,9 @@ $ErrorActionPreference = "Stop"
 
 if (-not $Usuario) { $Usuario = Get-CurrentUser }
 
-$all = Find-AllPlanFolders
+$all = @(Find-AllPlanFolders)
 $emAndamento = @($all | Where-Object { $_.Status -eq "em-andamento" })
-$maxNum = if ($all.Count -gt 0) { ($all | ForEach-Object { [int]$_.Numero } | Measure-Object -Maximum).Maximum } else { 0 }
+$maxNum = if ($all.Count -gt 0) { [int]((($all | ForEach-Object { [int]$_.Numero }) | Measure-Object -Maximum).Maximum) } else { 0 }
 
 $planos = @()
 foreach ($p in $emAndamento | Sort-Object { [int]$_.Numero }) {

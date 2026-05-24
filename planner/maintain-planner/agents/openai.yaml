@@ -1,5 +1,22 @@
 interface:
   display_name: "Manter Planejador"
-  short_description: "Mantem planos e criterios"
-  default_prompt: "Use $maintain-planner para criar, revisar ou validar planos antes de implementar."
+  short_description: "Dona da numeracao NNNNNN e do indice por usuario de planos"
+  default_prompt: "Use $maintain-planner para criar plano (criar-plano.ps1), concluir (concluir-plano.ps1), iniciar (iniciar-plano.ps1) ou regerar indice (atualizar-indice-planos.ps1)."
 
+when_to_use:
+  - criar plano novo (aloca proximo numero, cria pasta NNNNNN-titulo-kebab, gera template)
+  - iniciar/concluir plano (move entre raiz do plan/ e concluido/, atualiza indice)
+  - revisar estrutura de plan/ em qualquer contexto (root, empresa, projeto, skill, tool)
+  - listar planos em-andamento por usuario (jz, jf)
+
+how_to_use:
+  - criar: scripts/criar-plano.ps1 -Titulo "..." -Dono root|<empresa>|<empresa>/<projeto>|skill/<skill>|tools/<tool> [-Prioridade N] [-Chamado <id>]
+  - concluir: scripts/concluir-plano.ps1 -Numero NNNNNN
+  - iniciar (reativar): scripts/iniciar-plano.ps1 -Numero NNNNNN
+  - regerar indice: scripts/atualizar-indice-planos.ps1 [-Usuario jz|jf]
+
+limites:
+  - nao reutilizar numero (sequencia e global e crescente)
+  - nao manter no indice planos concluidos ou descartados
+  - nao criar plano fora do plan/ do contexto dono
+  - nao concluir plano com chamado nao registrado
