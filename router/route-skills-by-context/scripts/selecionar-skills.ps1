@@ -35,6 +35,10 @@ if ($Empresa -ne "root") {
     $empresaSkills += @("maintain-activities")
 }
 
+if ($Empresa -eq "syg" -and $TipoAtividade -eq "execucao-tecnica") {
+    $empresaSkills += @("syg-sonarcloud-specialist")
+}
+
 if (-not [string]::IsNullOrWhiteSpace($Projeto)) {
     $projetoSkills += @("maintain-activities")
 }
