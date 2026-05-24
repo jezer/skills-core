@@ -84,8 +84,8 @@ if ($DryRun) {
     return
 }
 
-Set-Content -LiteralPath $jsonPath -Value $json -Encoding UTF8
-Set-Content -LiteralPath $mdPath   -Value ($mdLines -join "`n") -Encoding UTF8
+Write-Utf8NoBom -Path $jsonPath -Content $json
+Write-Utf8NoBom -Path $mdPath   -Content (($mdLines -join "`n"))
 
 Write-Host "Indice salvo: $jsonPath"
 Write-Host "Markdown:     $mdPath"

@@ -69,7 +69,7 @@ $template = @"
 - ...
 "@
 
-Set-Content -LiteralPath (Join-Path $planoFolder "plano.md") -Value $template -Encoding UTF8
+Write-Utf8NoBom -Path (Join-Path $planoFolder "plano.md") -Content $template
 
 Write-Host "Plano criado: $planoFolder"
 

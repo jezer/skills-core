@@ -31,7 +31,7 @@ if (Test-Path -LiteralPath $planoMd) {
     $content = Get-Content -LiteralPath $planoMd
     $content = $content -replace "^- Status:.*$", "- Status: em-andamento"
     $content = $content -replace "^- Atualizado em:.*$", "- Atualizado em: $hoje"
-    Set-Content -LiteralPath $planoMd -Value $content -Encoding UTF8
+    Write-Utf8NoBom -Path $planoMd -Content (($content -join "`n"))
 }
 
 Write-Host "Plano $Numero iniciado: $destino"

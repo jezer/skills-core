@@ -46,6 +46,15 @@ if ($LASTEXITCODE -ne 0) {
     throw ("Falha na validacao de indices." + [Environment]::NewLine + ($indicesOut -join [Environment]::NewLine))
 }
 
+# Gate: run-skill-tests (Pester + pytest) antes da sincronizacao IA
+$runTestsScript = Join-Path $basePath "run-skill-tests.ps1"
+if (Test-Path -LiteralPath $runTestsScript) {
+    $testsOut = & powershell -ExecutionPolicy Bypass -File $runTestsScript -SkillsRoot $SkillsRoot -NoPython 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        throw ("Falha em run-skill-tests." + [Environment]::NewLine + ($testsOut -join [Environment]::NewLine))
+    }
+}
+
 $syncArgs = @(
     "-ExecutionPolicy", "Bypass",
     "-File", $syncScript,
@@ -68,6 +77,7 @@ try {
 [pscustomobject]@{
     ValidacaoSkills = "ok"
     ValidacaoIndices = "ok"
+    RunSkillTests = if (Test-Path -LiteralPath $runTestsScript) { "ok" } else { "skip" }
     SincronizacaoIA = "ok"
     ApplyGeminiSync = [bool]$ApplyGeminiSync
 }

@@ -78,8 +78,74 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 2. `scripts/atualizar-indices-skills.ps1`: gera ou valida indices auxiliares em `C:\codes\skills\indices`.
 3. Quando necessario, usar `configure-machine-default-skill` para validar a ponte global minima do Codex.
 4. `scripts/sincronizar-skills-ia.ps1`: sem `-Apply` exibe divergencias (missing/extras) entre skills oficiais e os 5 destinos (gemini, copilot, claude, codex, codex_global) e valida a ponte Codex; com `-Apply` copia todos os arquivos (`SKILL.md`, `agents/`, `scripts/`) para cada destino.
-5. `scripts/finalizar-manutencao-skills.ps1`: comando unico final e obrigatorio, executando nesta ordem: validacao de skills, validacao de indices e sincronizacao IA.
+5. `scripts/finalizar-manutencao-skills.ps1`: comando unico final e obrigatorio, executando nesta ordem: validacao de skills, validacao de indices, run-skill-tests e sincronizacao IA.
+6. `scripts/run-skill-tests.ps1 [-Skill <nome>] [-Path <skill_dir>]`: roda Pester em `tests/*.Tests.ps1` e pytest em `tests/test_*.py` de todas as skills (ou de uma especifica). Falha do runner bloqueia `finalizar-manutencao-skills.ps1`.
 
+
+## Governanca de skills (regras estruturais)
+
+### Hierarquia obrigatoria
+
+1. Skill oficial mora em UM dos dominios canonicos: `core/`, `domains/{languages,services,products,tools,disciplines}/`, `generators/`, `synchronizers/`.
+2. **Proibido** criar `SKILL.md` na raiz `C:\codes\skills\` (item 29 do AGENTS.md).
+3. **Proibido** colocar skill em `dist/`; `dist/` e destino de sincronizacao multi-IA, nao origem.
+4. Cada skill tem repositorio Git proprio NAO; vive dentro do repo pai do dominio.
+
+### Estrutura interna minima
+
+```
+{skill}/
+  SKILL.md                <- frontmatter `name` e `description` + corpo curto
+  agents/openai.yaml      <- descricao adicional para IAs
+  scripts/                <- (se aplicavel) scripts parametrizados
+    helper.ps1 / helper.py
+  tests/                  <- (se houver scripts) Pester + pytest
+    helper.Tests.ps1
+    test_helper.py
+```
+
+### Scripts: regras obrigatorias
+
+1. Todo script `.ps1` ou `.py` deve receber **parametros**; nao hardcodear paths absolutos quando puder ser parametro.
+2. Todo script `.ps1` declara `param(...)` no topo + `$ErrorActionPreference = "Stop"`.
+3. Todo script `.py` usa `argparse` ou `typer` e tem `if __name__ == "__main__": raise SystemExit(main())`.
+4. Scripts que escrevem arquivos de texto devem usar UTF-8 SEM BOM (`Write-Utf8NoBom` em PS, `encoding="utf-8"` em Python).
+5. Script destinado a ser reusado por outras skills mora na skill dona; outras skills chamam por path.
+6. Quando duas skills compartilham helpers, criar arquivo `_comum.ps1` dentro da skill dominante e dot-source nas demais (relacionamento explicito no SKILL.md).
+
+### Testes: regras obrigatorias
+
+1. Toda skill com **pelo menos um script** tem pasta `tests/` com:
+   - Pester `*.Tests.ps1` para cada `.ps1` da skill.
+   - pytest `test_*.py` para cada `.py` da skill.
+2. Cada teste cobre pelo menos: (a) caso valido minimo, (b) caso de erro previsivel.
+3. Tests usam mocks ou inputs temporarios (`New-TemporaryFile`, `tmp_path` do pytest); **nao** dependem de estado real do workspace fora de inputs declarados.
+4. Runner global: `maintain-skills/scripts/run-skill-tests.ps1` executa Pester + pytest em todas as skills (ou em uma especifica via `-Skill <nome>`).
+5. `finalizar-manutencao-skills.ps1` chama o runner como **gate** antes da sincronizacao IA.
+
+### Criterio fixo de duplicacao
+
+Aplicado pela `maintain-skills` quando duas (ou mais) skills sao candidatas a sobreposicao:
+
+| Overlap (descricao + corpo SKILL.md) | Acao |
+|---|---|
+| > 60% | **Fundir**: manter uma skill, redirecionar referencias da outra, mover scripts/tests para a remanescente. |
+| 30% - 60% | **Ajustar escopo**: editar SKILL.md de ambas para deixar diferencas explicitas; criar referencias cruzadas. |
+| < 30% | **Manter separadas**: registrar no `agents/openai.yaml` que sao distintas para reduzir ambiguidade futura. |
+
+A medicao de overlap e qualitativa via leitura comparativa; nao requer ferramenta automatica.
+
+### Diretrizes de juncao
+
+1. Toda fusao preserva integralmente as regras textuais das skills originais (transcrever para a remanescente antes de remover).
+2. Toda fusao remove a skill perdente de TODOS os destinos: oficial, `dist/{claude,codex,copilot,gemini}`, ponte `~/.codex/skills`, indices `skills-index.json`, `aliases.json`, `contexto-map.json`.
+3. Toda fusao gera commit com mensagem `chore(skills): funde X em Y` e referencia o chamado.
+
+### Diretrizes de pergunta antes de inventar
+
+1. Quando o usuario pedir "revisao", "limpeza", "padronizacao" ou "fusao" envolvendo varias skills, fazer perguntas claras (framework, escopo, criterio, lotes) **antes** de execucao.
+2. Quando uma decisao for irreversivel (fusao, remocao, renomeacao), confirmar com o usuario salvo autorizacao explicita previa.
+3. Decisoes pequenas reversiveis (formatacao, BOM, ajuste de description) seguem o padrao "executar direto sem perguntas intermediarias" do CLAUDE.md.
 
 ## Correlacao Obrigatoria de Skills
 

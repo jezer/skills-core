@@ -80,8 +80,8 @@ foreach ($skill in $skills) {
     }
 }
 
-$failed = $results | Where-Object { -not $_.Valid }
-$passed = $results | Where-Object { $_.Valid }
+$failed = @($results | Where-Object { -not $_.Valid })
+$passed = @($results | Where-Object { $_.Valid })
 
 Write-Host ""
 Write-Host "=== Resumo da validacao de skills ==="

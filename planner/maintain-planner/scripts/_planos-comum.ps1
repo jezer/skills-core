@@ -1,4 +1,10 @@
 $script:WorkspaceRoot = "C:\codes"
+$script:Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+
+function Write-Utf8NoBom {
+    param([string]$Path, [string]$Content)
+    [System.IO.File]::WriteAllText($Path, $Content, $script:Utf8NoBom)
+}
 $script:RootPlanDir   = Join-Path $script:WorkspaceRoot "plan"
 
 function Get-CurrentUser {
