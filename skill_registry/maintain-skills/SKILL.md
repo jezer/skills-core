@@ -74,7 +74,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 
 ## Scripts
 
-1. `scripts/validate-skills.ps1`: valida todos os diretorios em `C:\codes\skills` que possuem `SKILL.md`.
+1. `scripts/validate-skills.ps1`: valida todos os diretorios em `C:\codes\skills` que possuem `SKILL.md`. Flags: `-AutoFixBom` remove BOM UTF-8 antes da validacao; `-ContinueOnError` reporta tudo sem abortar; `-ReportPath <caminho>` salva relatorio JSON com categoria de cada falha (`frontmatter-missing`, `yaml-invalid`, `description-angle-brackets`, `description-too-long`, `name-format`, `name-too-long`, `field-missing`, `unexpected-key`, `outro`).
 2. `scripts/atualizar-indices-skills.ps1`: gera ou valida indices auxiliares em `C:\codes\skills\indices`.
 3. Quando necessario, usar `configure-machine-default-skill` para validar a ponte global minima do Codex.
 4. `scripts/sincronizar-skills-ia.ps1`: sem `-Apply` exibe divergencias (missing/extras) entre skills oficiais e os 5 destinos (gemini, copilot, claude, codex, codex_global) e valida a ponte Codex; com `-Apply` copia todos os arquivos (`SKILL.md`, `agents/`, `scripts/`) para cada destino.
