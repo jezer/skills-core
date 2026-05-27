@@ -26,6 +26,7 @@ Manter atividades verificaveis dentro de planos.
 7. Nao duplicar regra de arquivamento de concluido em outras skills; esta regra pertence somente a `maintain-activities`.
 8. Nao permitir inicio de atividade persistente sem evidenciar execucao de `route-skills-by-context` na sessao ativa.
 9. Nao arquivar plano concluido sem verificar que existe ao menos uma sessao em `sessoes/feitas/` do chamado vinculado.
+10. Nao permitir atividades em plano sem numeracao oficial no nome do plano (`NNNNNN-titulo-kebab`).
 
 ## Fluxo
 
@@ -45,6 +46,7 @@ Manter atividades verificaveis dentro de planos.
     c. Mover o plano para `concluido/` no mesmo diretorio somente apos sessao feita confirmada.
 12. Antes de iniciar, executar ou concluir atividade persistente, validar na sessao ativa os campos de roteamento de skills.
 13. Aplicar `scripts/validar-roteamento-obrigatorio.ps1` como gate tecnico antes de liberar atividade persistente.
+14. Antes de liberar implementacao, confirmar sequencia basica: sessao do chamado ativa, plano numerado valido e atividades com skills definidas.
 
 ## Scripts
 
@@ -65,4 +67,3 @@ Manter atividades verificaveis dentro de planos.
 - motivo da escolha
 - validacao da escolha
 3. Sem esse registro, manter atividade como `bloqueado`.
-

@@ -90,6 +90,8 @@ Regras:
 5. Nao mover plano de uma pasta `plan/` para outra (numero acompanha contexto dono).
 6. Nao criar regras de planejamento fora desta skill; tools sao apoio.
 7. Nao concluir plano com atividades pendentes sem registrar excecao na sessao.
+8. Nao permitir plano sem numeracao no nome (`NNNNNN-titulo-kebab`) em nenhum contexto.
+9. Nao permitir criacao manual de arquivo avulso de plano fora da pasta numerada oficial.
 
 ## Fluxo
 
@@ -101,6 +103,7 @@ Regras:
 6. Validar plano com `scripts/validar-plano.ps1`.
 7. Indice e regenerado automaticamente; conferir `em_andamento_total` e `proximo_numero`.
 8. Toda atividade executavel deve registrar: skills candidatas, skill executora, skills de apoio, motivo.
+9. Reforcar processo basico antes da implementacao: sessao de chamado ativa -> plano numerado -> atividades com skills -> execucao tecnica.
 
 ## Scripts
 
