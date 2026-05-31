@@ -38,6 +38,7 @@ foreach ($p in $emAndamento | Sort-Object { [int]$_.Numero }) {
         empresa              = $empresa
         projeto              = $projeto
         skill                = $skill
+        usuario_atual        = if ($meta["Usuario atual"]) { $meta["Usuario atual"] } else { $Usuario }
         prioridade           = if ($meta.Prioridade) { [int]$meta.Prioridade } else { 999 }
         status               = $p.Status
         criado_em            = $meta["Criado em"]
@@ -69,10 +70,10 @@ $mdLines += "- Em andamento: $($indice.em_andamento_total)"
 $mdLines += "- Proximo numero: $($indice.proximo_numero)"
 $mdLines += ""
 if ($planos.Count -gt 0) {
-    $mdLines += "| Numero | Titulo | Dono | Prioridade | Chamado | Caminho |"
-    $mdLines += "|---|---|---|---:|---|---|"
+    $mdLines += "| Numero | Usuario | Titulo | Dono | Prioridade | Chamado | Caminho |"
+    $mdLines += "|---|---|---|---|---:|---|---|"
     foreach ($p in ($planos | Sort-Object prioridade, numero)) {
-        $mdLines += "| $($p.numero) | $($p.titulo) | $($p.dono) | $($p.prioridade) | $($p.chamado) | $($p.caminho) |"
+        $mdLines += "| $($p.numero) | $($p.usuario_atual) | $($p.titulo) | $($p.dono) | $($p.prioridade) | $($p.chamado) | $($p.caminho) |"
     }
 } else {
     $mdLines += "Nenhum plano em andamento."

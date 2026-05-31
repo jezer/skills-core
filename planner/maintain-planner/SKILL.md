@@ -12,6 +12,7 @@ Manter o ciclo de vida de planos verificaveis no workspace `C:\codes`. A skill e
 ## Conceitos
 
 - **Numero de plano**: inteiro sequencial global no workspace, formatado com 6 digitos (`000001`, `000002`, ...). Unico entre todos os `plan/`.
+- **Usuario do plano**: usuario atual da maquina no momento da criacao, lido de `C:\codes\personalizado.md` (`- Usuario atual: jz`, `jf`, etc.) e gravado no `plano.md` e no indice.
 - **Pasta de plano**: `NNNNNN-titulo-kebab/` dentro do `plan/` do contexto dono.
 - **Indice por usuario**: `C:\codes\plan\indice-planos-{usuario}.{json,md}` lista apenas planos `em-andamento`. Quando o plano fica `concluido` ou `descartado`, sai do indice.
 - **Concluido**: plano arquivado em `{plan_dir}/concluido/NNNNNN-titulo-kebab/`.
@@ -49,6 +50,7 @@ Contexto pode ser root (`C:\codes\plan`), empresa (`C:\codes\{empresa}\plan`), p
       "empresa": null,
       "projeto": null,
       "skill": "maintain-planner",
+      "usuario_atual": "jz",
       "prioridade": 1,
       "status": "em-andamento",
       "criado_em": "2026-05-24",
@@ -65,6 +67,7 @@ Regras:
 1. `proximo_numero` e sempre `max(numero) + 1` considerando **todos os planos do workspace** (em-andamento + concluidos + descartados).
 2. `planos[]` lista **apenas** os com `status: em-andamento`.
 3. Indice e regenerado por `scripts/atualizar-indice-planos.ps1` apos qualquer criar/iniciar/concluir.
+4. Todo plano novo deve gravar `- Usuario atual: <usuario>` no cabecalho, usando `personalizado.md` como fonte local da maquina.
 
 ## Status de plano
 

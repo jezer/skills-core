@@ -27,6 +27,7 @@ if (Test-Path -LiteralPath $planoFolder) {
 New-Item -ItemType Directory -Path $planoFolder -Force | Out-Null
 
 $hoje = (Get-Date).ToString("yyyy-MM-dd")
+$usuarioAtual = Get-CurrentUser
 $skillsLine = if ($SkillsRelacionadas) { ($SkillsRelacionadas -join ", ") } else { "" }
 
 $template = @"
@@ -35,6 +36,7 @@ $template = @"
 - Numero: $numStr
 - Titulo: $Titulo
 - Dono: $Dono
+- Usuario atual: $usuarioAtual
 - Prioridade: $Prioridade
 - Status: em-andamento
 - Criado em: $hoje
@@ -74,5 +76,4 @@ Write-Utf8NoBom -Path (Join-Path $planoFolder "plano.md") -Content $template
 Write-Host "Plano criado: $planoFolder"
 
 # Regenera indice do usuario corrente
-$user = Get-CurrentUser
-& (Join-Path $PSScriptRoot "atualizar-indice-planos.ps1") -Usuario $user
+& (Join-Path $PSScriptRoot "atualizar-indice-planos.ps1") -Usuario $usuarioAtual
