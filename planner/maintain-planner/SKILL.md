@@ -77,11 +77,19 @@ Regras:
 | `concluido` | `{plan_dir}/concluido/NNNNNN-.../` | nao |
 | `descartado` | `{plan_dir}/descartado/NNNNNN-.../` | nao |
 
+## Regra obrigatoria de conclusao
+
+1. Concluir plano sempre significa mover a pasta numerada `NNNNNN-titulo-kebab/` para `concluido/NNNNNN-titulo-kebab/` no mesmo `plan/` do contexto dono.
+2. E proibido deixar plano com `Status: concluido` na pasta ativa do `plan/`.
+3. Apos mover para `concluido/`, regenerar o indice do usuario; o plano concluido nao pode permanecer em `indice-planos-{usuario}.json`.
+4. Se existir atividade bloqueada, pendente ou em andamento que nao possa ser executada localmente, registrar excecao objetiva na sessao e marcar a atividade como `cancelado` ou `bloqueado` antes da conclusao; nunca concluir sem explicar a excecao.
+5. A verificacao minima de fechamento e: caminho ativo nao existe, caminho em `concluido/` existe, `plano.md` tem `Status: concluido` e o indice ativo nao lista o numero do plano.
+
 ## Uso
 
 1. **Criar plano novo**: `scripts/criar-plano.ps1 -Titulo "meu plano" -Dono root|<empresa>|<empresa>/<projeto>|skill|tools/<tool>`. Pega o proximo numero, cria pasta, gera `plano.md` template, regenera indice do usuario corrente.
 2. **Iniciar plano existente** (mudar status -> em-andamento): `scripts/iniciar-plano.ps1 -Numero NNNNNN`.
-3. **Concluir plano**: `scripts/concluir-plano.ps1 -Numero NNNNNN`. Move para `concluido/NNNNNN-.../` e regenera indice.
+3. **Concluir plano**: `scripts/concluir-plano.ps1 -Numero NNNNNN`. Move obrigatoriamente a pasta numerada para `concluido/NNNNNN-.../`, atualiza `Status: concluido` e regenera o indice.
 4. **Regenerar indice manualmente**: `scripts/atualizar-indice-planos.ps1 [-Usuario jz|jf]`.
 
 ## Limites
@@ -104,7 +112,7 @@ Regras:
 4. Decidir contexto dono do plano (root, empresa, projeto, skill, tool).
 5. Para criar: chamar `criar-plano.ps1`; para concluir: `concluir-plano.ps1`.
 6. Validar plano com `scripts/validar-plano.ps1`.
-7. Indice e regenerado automaticamente; conferir `em_andamento_total` e `proximo_numero`.
+7. Indice e regenerado automaticamente; conferir `em_andamento_total`, `proximo_numero` e que o plano concluido nao aparece em `planos[]`.
 8. Toda atividade executavel deve registrar: skills candidatas, skill executora, skills de apoio, motivo.
 9. Reforcar processo basico antes da implementacao: sessao de chamado ativa -> plano numerado -> atividades com skills -> execucao tecnica.
 

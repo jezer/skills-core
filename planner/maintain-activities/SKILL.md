@@ -14,6 +14,7 @@ Manter atividades verificaveis dentro de planos.
 1. Usar quando o usuario pedir criacao, revisao ou atualizacao de atividades.
 2. Usar para marcar atividade como `pendente`, `em andamento`, `bloqueado`, `feito` ou `cancelado`.
 3. Usar para validar se uma atividade pode ser executada.
+4. Usar para preparar conclusao de plano, garantindo que todas as atividades estejam `feito` ou `cancelado` antes do arquivamento pela `maintain-planner`.
 
 ## Limites
 
@@ -43,10 +44,12 @@ Manter atividades verificaveis dentro de planos.
 11. Quando todas as atividades do plano estiverem `feito` ou `cancelado`:
     a. Verificar se existe sessao em `sessoes/feitas/` do chamado vinculado.
     b. Se nao existir: acionar `register-ticket-session` (`scripts/concluir-sessao.ps1`) antes de arquivar.
-    c. Mover o plano para `concluido/` no mesmo diretorio somente apos sessao feita confirmada.
+    c. Acionar `maintain-planner` para mover a pasta numerada do plano para `concluido/` no mesmo `plan/`; plano concluido nao pode permanecer na pasta ativa.
+    d. Conferir que o indice do usuario foi regenerado e que o plano concluido nao aparece mais em `indice-planos-{usuario}.json`.
 12. Antes de iniciar, executar ou concluir atividade persistente, validar na sessao ativa os campos de roteamento de skills.
 13. Aplicar `scripts/validar-roteamento-obrigatorio.ps1` como gate tecnico antes de liberar atividade persistente.
 14. Antes de liberar implementacao, confirmar sequencia basica: sessao do chamado ativa, plano numerado valido e atividades com skills definidas.
+15. Se uma atividade final depender de validacao externa ou manual impossivel na sessao local, registrar a excecao na sessao e marcar a atividade como `cancelado` ou `bloqueado`; somente depois liberar conclusao/arquivamento do plano.
 
 ## Scripts
 
