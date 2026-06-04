@@ -1,6 +1,11 @@
 ---
 name: route-skills-by-context
 description: Eleger skills executoras por contexto e tipo de atividade no workspace C:\codes. Use quando for necessario decidir, antes da execucao, quais skills basicas, de empresa, de projeto e globais de apoio devem ser acionadas, mantendo coerencia com root, ferramentas globais e compatibilidade Gemini/Codex.
+metadata:
+  triggers:
+    - rotear skills
+    - escolher skill executora
+    - roteamento obrigatorio
 ---
 
 # Rotear Skills por Contexto

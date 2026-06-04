@@ -1,6 +1,14 @@
 ---
 name: maintain-skills
 description: Manter skills locais do workspace C:\codes somente quando o usuario solicitar explicitamente. Use para criar, revisar, mover, organizar ou validar skills em C:\codes\skills; processar sessoes pendentes relacionadas a manutencao de skills; mover sessoes concluidas para feitas; garantir que C:\Users mantenha somente a ponte global minima; ou coordenar `maintain-automations` quando atividades repetitivas puderem virar scripts, templates, assets ou referencias parametrizadas.
+metadata:
+  triggers:
+    - criar skill
+    - revisar skill
+    - editar skill
+    - excluir skill
+    - validar skills
+    - distribuir skills
 ---
 
 # Manter Skills
@@ -103,6 +111,28 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
     helper.Tests.ps1
     test_helper.py
 ```
+
+### Triggers (gatilhos) - formato oficial (plano 000118)
+
+1. Gatilhos de uma skill sao declarados no frontmatter DENTRO de `metadata`
+   (o validador padrao de skills so permite `name`, `description`, `license`,
+   `allowed-tools` e `metadata` no topo - `triggers:` no topo e INVALIDO):
+
+```yaml
+---
+name: minha-skill
+description: ...
+metadata:
+  triggers:
+    - frase gatilho um
+    - frase gatilho dois
+---
+```
+
+2. Frases curtas e acionaveis, em portugues, sem repetir a description.
+3. Um mesmo gatilho pode existir em mais de uma skill (consumidores tratam
+   como relacao N:N - ex.: o registro do all_IA em `/skills/sync`).
+4. Campo OPCIONAL: skill sem `metadata.triggers` continua valida.
 
 ### Scripts: regras obrigatorias
 

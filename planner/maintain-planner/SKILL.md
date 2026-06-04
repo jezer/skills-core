@@ -1,6 +1,13 @@
 ---
 name: maintain-planner
 description: Gerencia o ciclo de vida de planos no workspace C:\codes - cria pasta numerada NNNNNN-titulo-kebab, mantem indice por usuario (jz, jf) em C:\codes\plan\indice-planos-{usuario}.json com apenas planos em-andamento, e move para concluido/ ao fim. Use quando criar, iniciar, concluir ou listar planos; revisar estrutura de plan/; ou atribuir o proximo numero de plano. A skill e a dona da numeracao global e do indice.
+metadata:
+  triggers:
+    - criar plano
+    - concluir plano
+    - iniciar plano
+    - numerar plano
+    - indice de planos
 ---
 
 # Manter Planejador

@@ -1,6 +1,12 @@
 ---
 name: maintain-activities
 description: Criar, atualizar, marcar ou verificar atividades dentro de planos em C:\codes. Use quando Codex precisar quebrar trabalho em atividades, atualizar status, registrar data de implementacao, validar criterio de aceite, ou impedir execucao de atividade sem escopo, criterio ou skill recomendada.
+metadata:
+  triggers:
+    - criar atividades
+    - atualizar atividade
+    - concluir atividade
+    - status de atividades
 ---
 
 # Manter Atividades

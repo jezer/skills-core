@@ -1,6 +1,10 @@
 ---
 name: periodic-skills-reviewer
 description: Executar revisoes periodicas de skills para detectar sobreposicao de proposito, falhas de dependencia e gaps de qualidade.
+metadata:
+  triggers:
+    - revisao periodica de skills
+    - detectar sobreposicao de skills
 ---
 
 # Revisor Periodico Skills
