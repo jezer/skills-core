@@ -55,6 +55,11 @@ $skills = Get-ChildItem -LiteralPath $SkillsRoot -Recurse -File -Filter SKILL.md
 
 $results = @()
 $bomFixed = @()
+$manifestoAvisos = @()
+$baselinePath = Join-Path $PSScriptRoot "manifesto-baseline.txt"
+$baselineSkills = if (Test-Path -LiteralPath $baselinePath) {
+    @(Get-Content -LiteralPath $baselinePath | Where-Object { $_ })
+} else { @() }
 
 foreach ($skill in $skills) {
     $skillMd = Join-Path $skill.FullName "SKILL.md"
@@ -70,13 +75,32 @@ foreach ($skill in $skills) {
     $valid = $LASTEXITCODE -eq 0
     $category = if ($valid) { "ok" } else { Classify-Error -Message $message }
 
+    # Plano 000125 (decisao 4-A): manifesto (metadata.camada) obrigatorio em
+    # skills NOVAS (fora do baseline); nas existentes sem manifesto -> aviso.
+    $temManifesto = $false
+    if (Test-Path -LiteralPath $skillMd) {
+        $raw = Get-Content -LiteralPath $skillMd -Raw
+        if ($raw -match "(?m)^\s+camada:\s*\S+") { $temManifesto = $true }
+    }
+    $noBaseline = $baselineSkills -contains $skill.Name
+    if (-not $temManifesto) {
+        if (-not $noBaseline) {
+            $valid = $false
+            $category = "manifesto-ausente"
+            $message = "Skill NOVA sem manifesto (metadata.camada/escopo_negativo) - obrigatorio (plano 000125)"
+        } else {
+            $manifestoAvisos += $skill.Name
+        }
+    }
+
     $results += [pscustomobject]@{
-        Name      = $skill.Name
-        Path      = $skill.FullName
-        Valid     = $valid
-        Category  = $category
-        Message   = $message
-        BomFixed  = $bomRemoved
+        Name         = $skill.Name
+        Path         = $skill.FullName
+        Valid        = $valid
+        Category     = $category
+        Message      = $message
+        BomFixed     = $bomRemoved
+        TemManifesto = $temManifesto
     }
 }
 
@@ -90,6 +114,9 @@ Write-Host "Validas:  $($passed.Count)"
 Write-Host "Invalidas:$($failed.Count)"
 if ($bomFixed.Count -gt 0) {
     Write-Host "BOM removido em: $($bomFixed -join ', ')"
+}
+if ($manifestoAvisos.Count -gt 0) {
+    Write-Host "AVISO (nao bloqueante): $($manifestoAvisos.Count) skill(s) do baseline sem manifesto (metadata.camada): $($manifestoAvisos -join ', ')"
 }
 
 if ($failed.Count -gt 0) {

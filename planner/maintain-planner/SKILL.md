@@ -2,6 +2,19 @@
 name: maintain-planner
 description: Gerencia o ciclo de vida de planos no workspace C:\codes - cria pasta numerada NNNNNN-titulo-kebab, mantem indice por usuario (jz, jf) em C:\codes\plan\indice-planos-{usuario}.json com apenas planos em-andamento, e move para concluido/ ao fim. Use quando criar, iniciar, concluir ou listar planos; revisar estrutura de plan/; ou atribuir o proximo numero de plano. A skill e a dona da numeracao global e do indice.
 metadata:
+  camada: atividade
+  escopo_negativo:
+    - nao implementa o codigo das atividades planejadas
+    - nao cria chamados (maintain-tickets)
+    - nao conclui plano sem criterios de aceite verificados
+  dependencias:
+    - maintain-activities
+    - maintain-tickets
+  saidas:
+    - criar-plano.ps1
+    - validar-plano.ps1
+    - concluir-plano.ps1
+    - indice de planos regenerado
   triggers:
     - criar plano
     - concluir plano
@@ -110,6 +123,7 @@ Regras:
 7. Nao concluir plano com atividades pendentes sem registrar excecao na sessao.
 8. Nao permitir plano sem numeracao no nome (`NNNNNN-titulo-kebab`) em nenhum contexto.
 9. Nao permitir criacao manual de arquivo avulso de plano fora da pasta numerada oficial.
+10. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Fluxo
 

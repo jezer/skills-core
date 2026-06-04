@@ -2,6 +2,14 @@
 name: periodic-skills-reviewer
 description: Executar revisoes periodicas de skills para detectar sobreposicao de proposito, falhas de dependencia e gaps de qualidade.
 metadata:
+  camada: atividade
+  escopo_negativo:
+    - nao altera skills diretamente (propoe via maintain-skills)
+    - nao valida planos (maintain-planner)
+  dependencias:
+    - maintain-skills
+  saidas:
+    - relatorio periodico de aderencia das skills
   triggers:
     - revisao periodica de skills
     - detectar sobreposicao de skills
@@ -22,6 +30,7 @@ Auditar continuamente o ecossistema de skills e abrir correcoes quando necessari
 
 1. Nao implementar mudancas diretas sem atividade aprovada.
 2. Nao substituir skill dona de manutencao.
+3. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Dependencias operacionais
 

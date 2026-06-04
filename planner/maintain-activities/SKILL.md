@@ -2,6 +2,15 @@
 name: maintain-activities
 description: Criar, atualizar, marcar ou verificar atividades dentro de planos em C:\codes. Use quando Codex precisar quebrar trabalho em atividades, atualizar status, registrar data de implementacao, validar criterio de aceite, ou impedir execucao de atividade sem escopo, criterio ou skill recomendada.
 metadata:
+  camada: atividade
+  escopo_negativo:
+    - nao cria planos (maintain-planner)
+    - nao executa mudancas tecnicas persistentes
+  dependencias:
+    - maintain-planner
+  saidas:
+    - atividades detalhadas com skill executora
+    - validar-roteamento-obrigatorio.ps1
   triggers:
     - criar atividades
     - atualizar atividade
@@ -34,6 +43,7 @@ Manter atividades verificaveis dentro de planos.
 8. Nao permitir inicio de atividade persistente sem evidenciar execucao de `route-skills-by-context` na sessao ativa.
 9. Nao arquivar plano concluido sem verificar que existe ao menos uma sessao em `sessoes/feitas/` do chamado vinculado.
 10. Nao permitir atividades em plano sem numeracao oficial no nome do plano (`NNNNNN-titulo-kebab`).
+11. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Fluxo
 

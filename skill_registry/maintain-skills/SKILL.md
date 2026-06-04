@@ -2,6 +2,17 @@
 name: maintain-skills
 description: Manter skills locais do workspace C:\codes somente quando o usuario solicitar explicitamente. Use para criar, revisar, mover, organizar ou validar skills em C:\codes\skills; processar sessoes pendentes relacionadas a manutencao de skills; mover sessoes concluidas para feitas; garantir que C:\Users mantenha somente a ponte global minima; ou coordenar `maintain-automations` quando atividades repetitivas puderem virar scripts, templates, assets ou referencias parametrizadas.
 metadata:
+  camada: padroes
+  escopo_negativo:
+    - nao cria nem conclui planos (maintain-planner)
+    - nao executa operacoes git (maintain-git)
+    - nao roteia demandas (route-skills-by-context)
+  dependencias:
+    - powershell-specialist
+  saidas:
+    - validate-skills.ps1
+    - sincronizar-skills-ia.ps1
+    - SKILL.md normalizado no padrao
   triggers:
     - criar skill
     - revisar skill
@@ -35,6 +46,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 7. Nao permitir que uma skill assuma proposito de outra skill ja existente.
 8. Nao permitir que skills criem/editem planos diretamente fora da skill `maintain-planner`.
 9. Nao criar skill fora do contexto dono (projeto, empresa ou root) definido para a manutencao.
+10. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Fluxo
 
@@ -43,7 +55,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 3. Executar `route-skills-by-context` antes de qualquer mudanca persistente de skill e registrar na sessao ativa.
 4. Criar skills reais somente em `C:\codes\skills`, dentro do subdiretorio de dominio correto (`core/`, `domains/`, `generators/`, `synchronizers/`); nunca criar SKILL.md diretamente na raiz de `C:\codes\skills`.
 5. Manter em `C:\Users\jezer.santos_nowvert\.codex\skills` somente a ponte global minima `usar-codes-agents`, alem de pastas internas do sistema.
-6. Escrever `SKILL.md` com frontmatter contendo somente `name` e `description`.
+6. Escrever `SKILL.md` com frontmatter contendo `name`, `description` e, quando aplicavel, `metadata` (triggers do plano 000118 e manifesto do plano 000125); nenhuma outra chave no topo.
 7. Manter o corpo da skill curto e operacional.
 8. Validar toda skill alterada com `quick_validate.py`.
 9. Ao concluir, completar a sessao pendente relacionada e mover para `sessoes/feitas/NNN.md`.
@@ -133,6 +145,62 @@ metadata:
 3. Um mesmo gatilho pode existir em mais de uma skill (consumidores tratam
    como relacao N:N - ex.: o registro do all_IA em `/skills/sync`).
 4. Campo OPCIONAL: skill sem `metadata.triggers` continua valida.
+
+### Manifesto de governanca - formato oficial (plano 000125)
+
+1. O manifesto da escopo MAQUINA-LEGIVEL a skill e vive no frontmatter
+   DENTRO de `metadata` (mesmo caminho dos triggers). Ele NAO duplica o
+   corpo: proposito e uso continuam EXCLUSIVOS de `## Objetivo`/`## Uso`;
+   `## Limites` permanece o texto humano e `escopo_negativo` e o resumo
+   maquina-legivel dele (decisao 1-A do plano 000125).
+
+```yaml
+---
+name: minha-skill
+description: ...
+metadata:
+  camada: ferramenta   # ferramenta | atividade | padroes
+  escopo_negativo:
+    - nao faz X (devolver ao roteador)
+    - nao decide Y
+  dependencias:
+    - skill-ajudadora-um
+  saidas:
+    - script parametrizado Z
+    - relatorio W
+---
+```
+
+2. `camada` (hierarquia logica, decisao 2-A - NAO muda pastas):
+   - `ferramenta`: conhecimento amplo de uma ferramenta/linguagem, sem
+     especializacao por empresa/atividade. Ao receber pedido especifico,
+     NAO resolve: orienta criar skill focada (de atividade).
+   - `atividade`: resolve uma atividade concreta e SEMPRE consulta a(s)
+     skill(s) de ferramenta declaradas em `dependencias`.
+   - `padroes`: aplica padroes/convencoes consultando as skills de
+     atividade e de ferramenta da cadeia.
+   A dependencia flui da mais especifica para a mais generica
+   (padroes -> atividade -> ferramenta); nenhuma skill fura camadas.
+3. `escopo_negativo`: 2-5 frases curtas com o que a skill NAO faz - o
+   criterio objetivo de devolucao ao roteador (ver Roteamento e fallback).
+4. `dependencias` (decisao 3-A): fonte DECLARADA das skills ajudadoras
+   (nomes). Os `[[wikilinks]]` do corpo continuam validos como citacao;
+   consumidores (ex.: all_IA) leem a UNIAO dos dois.
+5. `saidas`: o que a skill entrega; PRIORIZAR scripts parametrizados e
+   idempotentes sobre respostas pontuais (DRY).
+6. Obrigatoriedade (decisao 4-A): OBRIGATORIO em skills novas; nas
+   existentes a populacao e gradual (validador local avisa sem bloquear).
+   O baseline de skills pre-manifesto fica em
+   `scripts/manifesto-baseline.txt`.
+
+### Roteamento e fallback (plano 000125, decisao 5-A)
+
+1. Demanda fora do proposito NAO se improvisa: a skill declara "isto nao e
+   meu proposito" e DEVOLVE ao `route-skills-by-context`, unico orquestrador.
+2. O criterio objetivo de devolucao e o `escopo_negativo` do manifesto.
+3. Toda skill populada com manifesto carrega a frase padrao nos
+   `## Limites`: "Fora do proposito desta skill, devolver ao
+   `route-skills-by-context` (nao improvisar)."
 
 ### Scripts: regras obrigatorias
 
