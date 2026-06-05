@@ -100,6 +100,7 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
 4. `scripts/sincronizar-skills-ia.ps1`: sem `-Apply` exibe divergencias (missing/extras) entre skills oficiais e os 5 destinos (gemini, copilot, claude, codex, codex_global) e valida a ponte Codex; com `-Apply` copia todos os arquivos (`SKILL.md`, `agents/`, `scripts/`) para cada destino.
 5. `scripts/finalizar-manutencao-skills.ps1`: comando unico final e obrigatorio, executando nesta ordem: validacao de skills, validacao de indices, run-skill-tests, sincronizacao IA e PUBLICACAO NO BANCO do all_IA (plano skills 000133, caso 1-A: `POST /skills/sync` ingere o pacote completo com hash/`alterado_em`; em seguida `POST /skills/sync/run` distribui banco -> dist/). Backend fora: registra pendencia em `indices/.sync-banco-pendente` (o check de frescor do roteador cobre depois).
 6. `scripts/run-skill-tests.ps1 [-Skill <nome>] [-Path <skill_dir>]`: roda Pester em `tests/*.Tests.ps1` e pytest em `tests/test_*.py` de todas as skills (ou de uma especifica). Falha do runner bloqueia `finalizar-manutencao-skills.ps1`.
+7. `scripts/validar-correlacionadas.ps1`: plano 000135 do all_IA (AL-09) - valida as skills correlacionadas do LOTE de manutencao aberto (grafo de dependencias, triggers sobrepostos, pasta raiz completa) via `POST /skills/maintenance/validar`; o resultado fica no lote e e PRE-REQUISITO do checkin. Pedidos de manutencao acumulam em `POST /skills/change-requests` e so aplicam em lote (`POST /skills/maintenance/apply`).
 
 
 ## Governanca de skills (regras estruturais)
