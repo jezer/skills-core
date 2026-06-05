@@ -6,6 +6,18 @@ $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "_planos-comum.ps1")
 
 $Numero = $Numero.PadLeft(6, '0')
+
+# Plano 000130 do all_IA (casos 7-A/8-A): API principal + arquivos espelho.
+if (-not $env:ALLIA_FROM_API) {
+    $apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://localhost:8000" }
+    try {
+        $resp = Invoke-RestMethod -Method Post -Uri "$apiBase/plans/$Numero/concluir" -TimeoutSec 150
+        Write-Host "Via API all_IA: $($resp.saida_script)"
+        return
+    } catch {
+        Write-Host "API all_IA indisponivel - seguindo no fluxo local de arquivos. ($($_.Exception.Message))"
+    }
+}
 $all = Find-AllPlanFolders
 $alvo = $all | Where-Object { $_.Numero -eq $Numero -and $_.Status -eq "em-andamento" } | Select-Object -First 1
 if (-not $alvo) {

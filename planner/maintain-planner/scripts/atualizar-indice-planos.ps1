@@ -91,3 +91,16 @@ Write-Utf8NoBom -Path $mdPath   -Content (($mdLines -join "`n"))
 Write-Host "Indice salvo: $jsonPath"
 Write-Host "Markdown:     $mdPath"
 Write-Host "em_andamento_total=$($indice.em_andamento_total) proximo_numero=$($indice.proximo_numero)"
+
+# Plano 000130 do all_IA (caso 7-A): apos regenerar o indice de ARQUIVOS,
+# espelha no banco de planos via pipeline unica (best-effort; offline = o
+# proximo sync reconcilia).
+if (-not $env:ALLIA_FROM_API) {
+    $apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://localhost:8000" }
+    try {
+        Invoke-RestMethod -Method Post -Uri "$apiBase/plans/sync" -TimeoutSec 30 | Out-Null
+        Write-Host "Banco de planos sincronizado via API all_IA."
+    } catch {
+        Write-Host "API all_IA indisponivel - banco sera reconciliado no proximo sync."
+    }
+}

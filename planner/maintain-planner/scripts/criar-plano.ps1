@@ -9,6 +9,26 @@ param(
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "_planos-comum.ps1")
 
+# Plano 000130 do all_IA (casos 7-A/8-A): a API do banco de planos e o caminho
+# PRINCIPAL; com o backend fora do ar a skill segue no fluxo local de arquivos
+# (fallback) e o proximo sync reconcilia. ALLIA_FROM_API=1 indica que esta
+# execucao veio da propria API (anti-recursao: vai direto ao fluxo local).
+if (-not $env:ALLIA_FROM_API) {
+    $apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://localhost:8000" }
+    $body = @{ titulo = $Titulo; dono = $Dono; prioridade = $Prioridade }
+    if ($Chamado) { $body.chamado = $Chamado }
+    if ($SkillsRelacionadas) { $body.skills_relacionadas = @($SkillsRelacionadas) }
+    try {
+        $resp = Invoke-RestMethod -Method Post -Uri "$apiBase/plans/workspace/criar" `
+            -ContentType "application/json; charset=utf-8" `
+            -Body ([System.Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Depth 4))) -TimeoutSec 150
+        Write-Host "Via API all_IA: $($resp.saida_script)"
+        return
+    } catch {
+        Write-Host "API all_IA indisponivel - seguindo no fluxo local de arquivos. ($($_.Exception.Message))"
+    }
+}
+
 $slug = To-KebabCase -Text $Titulo
 if (-not $slug) { throw "Titulo gera slug vazio: $Titulo" }
 
