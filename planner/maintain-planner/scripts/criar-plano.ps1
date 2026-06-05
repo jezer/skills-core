@@ -9,23 +9,28 @@ param(
 $ErrorActionPreference = "Stop"
 . (Join-Path $PSScriptRoot "_planos-comum.ps1")
 
-# Plano 000130 do all_IA (casos 7-A/8-A): a API do banco de planos e o caminho
-# PRINCIPAL; com o backend fora do ar a skill segue no fluxo local de arquivos
-# (fallback) e o proximo sync reconcilia. ALLIA_FROM_API=1 indica que esta
-# execucao veio da propria API (anti-recursao: vai direto ao fluxo local).
+# Plano 000134 do all_IA (casos 1-A/2-A/6-A): o BANCO e a fonte - a API cria
+# o plano (numeracao do banco) e GERA os espelhos (pasta + plano.md + indice).
+# OFFLINE = somente leitura + FILA: a criacao vai para a fila local com numero
+# PROVISORIO e e aplicada na drenagem quando o backend voltar (caso 6-A).
+# ALLIA_FROM_API=1 = execucao disparada pela propria API (anti-recursao).
 if (-not $env:ALLIA_FROM_API) {
-    $apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://localhost:8000" }
-    $body = @{ titulo = $Titulo; dono = $Dono; prioridade = $Prioridade }
+    $body = @{ titulo = $Titulo; dono = $Dono; prioridade = $Prioridade; usuario = (Get-CurrentUser) }
     if ($Chamado) { $body.chamado = $Chamado }
     if ($SkillsRelacionadas) { $body.skills_relacionadas = @($SkillsRelacionadas) }
     try {
-        $resp = Invoke-RestMethod -Method Post -Uri "$apiBase/plans/workspace/criar" `
+        $resp = Invoke-RestMethod -Method Post -Uri "$(Get-AllIAApiBase)/plans/workspace/criar" `
             -ContentType "application/json; charset=utf-8" `
             -Body ([System.Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Depth 4))) -TimeoutSec 150
         Write-Host "Via API all_IA: $($resp.saida_script)"
         return
     } catch {
-        Write-Host "API all_IA indisponivel - seguindo no fluxo local de arquivos. ($($_.Exception.Message))"
+        $provisorio = "PROV-" + ("{0:D6}" -f (Get-NextPlanNumber))
+        $body.numero_provisorio = $provisorio
+        $arquivo = Add-FilaOffline -Op "criar-plano" -Payload $body
+        Write-Host "API all_IA indisponivel - criacao ENFILEIRADA (numero provisorio $provisorio)."
+        Write-Host "Fila: $arquivo (drenada automaticamente quando o backend voltar, ou via POST /plans/fila/drenar)."
+        return
     }
 }
 

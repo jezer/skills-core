@@ -74,10 +74,31 @@ try {
     $syncObj = ($syncOut | Out-String) | ConvertFrom-StringData -ErrorAction SilentlyContinue
 } catch {}
 
+# Plano skills 000133 (SK-08, caso 1-A): o fechamento da manutencao PUBLICA a
+# skill alterada no banco do all_IA (pacote completo + hash + alterado_em) -
+# autoria no disco, banco como fonte primaria de distribuicao/consulta.
+# Backend fora: registra pendencia (o check de frescor do roteador cobre).
+$publicacaoBanco = "pendente-offline"
+$apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://localhost:8000" }
+try {
+    Invoke-RestMethod -Method Post -Uri "$apiBase/skills/sync" -TimeoutSec 120 | Out-Null
+    $publicacaoBanco = "ok"
+    try {
+        Invoke-RestMethod -Method Post -Uri "$apiBase/skills/sync/run" `
+            -ContentType "application/json; charset=utf-8" `
+            -Body '{"delta": true}' -TimeoutSec 300 | Out-Null
+        $publicacaoBanco = "ok+dist"
+    } catch { }
+} catch {
+    $pendencia = Join-Path $IndicesPath ".sync-banco-pendente"
+    [System.IO.File]::WriteAllText($pendencia, (Get-Date -Format "o"), (New-Object System.Text.UTF8Encoding($false)))
+}
+
 [pscustomobject]@{
     ValidacaoSkills = "ok"
     ValidacaoIndices = "ok"
     RunSkillTests = if (Test-Path -LiteralPath $runTestsScript) { "ok" } else { "skip" }
     SincronizacaoIA = "ok"
+    PublicacaoBanco = $publicacaoBanco
     ApplyGeminiSync = [bool]$ApplyGeminiSync
 }

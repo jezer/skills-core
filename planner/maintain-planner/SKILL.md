@@ -27,11 +27,19 @@ metadata:
 
 ## Objetivo
 
-Manter o ciclo de vida de planos verificaveis no workspace `C:\codes`. A skill e dona da numeracao global de planos, da estrutura de pasta `NNNNNN-titulo-kebab/` em qualquer `plan/` e do indice por usuario em `C:\codes\plan\indice-planos-{usuario}.json`.
+Manter o ciclo de vida de planos verificaveis no workspace `C:\codes`. A skill opera como CLIENTE da API do all_IA: desde o plano 000134 (casos 1-A/2-A), o BANCO e a fonte primaria dos planos - a pasta `NNNNNN-titulo-kebab/`, o `plano.md` e o indice `C:\codes\plan\indice-planos-{usuario}.json` sao ESPELHOS GERADOS pelo banco (marca "GERADO DO BANCO").
+
+## Fonte primaria (000134)
+
+1. CONSULTA: o indice oficial e `GET /plans/workspace/indice` (API all_IA); o JSON do disco e espelho de leitura para uso offline.
+2. NUMERACAO: o proximo numero vem de `GET /plans/proximo-numero` (banco); o disco so e usado offline para gerar numero PROVISORIO.
+3. ESCRITA: criar/iniciar/concluir/editar passam pela API (`POST /plans/workspace/criar`, `POST /plans/{n}/iniciar|concluir`, `PATCH /plans/{n}`); o banco grava e regenera plano.md + indice.
+4. CONFLITO (caso 1-A): BANCO VENCE SEMPRE - edicao manual no plano.md e sobrescrita no proximo espelhamento; nao editar plano.md gerado.
+5. OFFLINE (caso 6-A): somente leitura dos espelhos + FILA de escrita em `C:\codes\plan\.fila-pendente\*.jsonl`, drenada automaticamente no startup do backend (ou `POST /plans/fila/drenar`).
 
 ## Conceitos
 
-- **Numero de plano**: inteiro sequencial global no workspace, formatado com 6 digitos (`000001`, `000002`, ...). Unico entre todos os `plan/`.
+- **Numero de plano**: inteiro sequencial global no workspace, formatado com 6 digitos (`000001`, `000002`, ...). Unico entre todos os `plan/`; alocado pelo BANCO (000134 caso 2-A).
 - **Usuario do plano**: usuario atual da maquina no momento da criacao, lido de `C:\codes\personalizado.md` (`- Usuario atual: jz`, `jf`, etc.) e gravado no `plano.md` e no indice.
 - **Pasta de plano**: `NNNNNN-titulo-kebab/` dentro do `plan/` do contexto dono.
 - **Indice por usuario**: `C:\codes\plan\indice-planos-{usuario}.{json,md}` lista apenas planos `em-andamento`. Quando o plano fica `concluido` ou `descartado`, sai do indice.
@@ -84,9 +92,9 @@ Contexto pode ser root (`C:\codes\plan`), empresa (`C:\codes\{empresa}\plan`), p
 
 Regras:
 
-1. `proximo_numero` e sempre `max(numero) + 1` considerando **todos os planos do workspace** (em-andamento + concluidos + descartados).
+1. `proximo_numero` e sempre `max(numero) + 1` considerando **todas as linhas do banco** (em-andamento + concluidos + descartados) - fonte: `GET /plans/proximo-numero`.
 2. `planos[]` lista **apenas** os com `status: em-andamento`.
-3. Indice e regenerado por `scripts/atualizar-indice-planos.ps1` apos qualquer criar/iniciar/concluir.
+3. O indice e REGENERADO PELO BANCO apos qualquer criar/iniciar/concluir/editar via API (000134); `scripts/atualizar-indice-planos.ps1` permanece apenas para reconstrucao manual a partir do disco (conciliacao/carga).
 4. Todo plano novo deve gravar `- Usuario atual: <usuario>` no cabecalho, usando `personalizado.md` como fonte local da maquina.
 
 ## Status de plano
@@ -140,10 +148,10 @@ Regras:
 ## Scripts
 
 1. `scripts/validar-plano.ps1`: valida estrutura minima de um `plano.md`.
-2. `scripts/criar-plano.ps1 -Titulo <titulo> -Dono <root|empresa|empresa/projeto|skill|tools/tool> [-Prioridade N] [-Chamado <id>]`: aloca proximo numero, cria pasta, gera template `plano.md`, regenera indice.
-3. `scripts/iniciar-plano.ps1 -Numero <NNNNNN>`: muda status do plano para em-andamento e regenera indice.
-4. `scripts/concluir-plano.ps1 -Numero <NNNNNN>`: move pasta para `concluido/` e regenera indice.
-5. `scripts/atualizar-indice-planos.ps1 [-Usuario <jz|jf>]`: varre todo o workspace, monta indice JSON+MD, salva em `C:\codes\plan\indice-planos-<usuario>.{json,md}`.
+2. `scripts/criar-plano.ps1 -Titulo <titulo> -Dono <root|empresa|empresa/projeto|skill|tools/tool> [-Prioridade N] [-Chamado <id>]`: cria via `POST /plans/workspace/criar` (numeracao do banco; espelhos gerados); offline = fila local com numero provisorio.
+3. `scripts/iniciar-plano.ps1 -Numero <NNNNNN>`: `POST /plans/{n}/iniciar`; offline = fila.
+4. `scripts/concluir-plano.ps1 -Numero <NNNNNN>`: `POST /plans/{n}/concluir` (banco muda status, move o espelho para `concluido/` e regenera o indice); offline = fila.
+5. `scripts/atualizar-indice-planos.ps1 [-Usuario <jz|jf>]`: reconstrucao manual do indice a partir do DISCO (apenas conciliacao/carga inicial - no dia a dia o indice e gerado pelo banco).
 
 ## Correlacao Obrigatoria de Skills
 

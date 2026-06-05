@@ -7,15 +7,17 @@ $ErrorActionPreference = "Stop"
 
 $Numero = $Numero.PadLeft(6, '0')
 
-# Plano 000130 do all_IA (casos 7-A/8-A): API principal + arquivos espelho.
+# Plano 000134 do all_IA (casos 1-A/6-A): BANCO e a fonte - a API conclui e
+# gera os espelhos; OFFLINE = fila local (sem mexer nos arquivos por fora).
 if (-not $env:ALLIA_FROM_API) {
-    $apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://localhost:8000" }
     try {
-        $resp = Invoke-RestMethod -Method Post -Uri "$apiBase/plans/$Numero/concluir" -TimeoutSec 150
-        Write-Host "Via API all_IA: $($resp.saida_script)"
+        $resp = Invoke-RestMethod -Method Post -Uri "$(Get-AllIAApiBase)/plans/$Numero/concluir" -TimeoutSec 150
+        Write-Host "Via API all_IA: plano $($resp.numero) -> $($resp.status)"
         return
     } catch {
-        Write-Host "API all_IA indisponivel - seguindo no fluxo local de arquivos. ($($_.Exception.Message))"
+        $arquivo = Add-FilaOffline -Op "concluir-plano" -Payload @{ numero = $Numero }
+        Write-Host "API all_IA indisponivel - conclusao ENFILEIRADA (fila: $arquivo)."
+        return
     }
 }
 $all = Find-AllPlanFolders

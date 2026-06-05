@@ -79,7 +79,39 @@ function Find-AllPlanFolders {
     return $found
 }
 
+# ── Plano 000134 do all_IA (casos 1-A/2-A/6-A): BANCO E A FONTE ──────────────
+# A API e o caminho oficial; offline = SOMENTE LEITURA (espelhos locais) +
+# FILA de escrita em C:\codes\plan\.fila-pendente (drenada pelo backend).
+
+function Get-AllIAApiBase {
+    if ($env:ALLIA_API_URL) { return $env:ALLIA_API_URL }
+    return "http://localhost:8000"
+}
+
+function Add-FilaOffline {
+    param(
+        [Parameter(Mandatory=$true)][string]$Op,
+        [Parameter(Mandatory=$true)][hashtable]$Payload
+    )
+    $filaDir = Join-Path $script:RootPlanDir ".fila-pendente"
+    if (-not (Test-Path -LiteralPath $filaDir)) {
+        New-Item -ItemType Directory -Path $filaDir -Force | Out-Null
+    }
+    $arquivo = Join-Path $filaDir ("{0}-{1}.jsonl" -f (Get-Date -Format "yyyyMMdd-HHmmss-fff"), (Get-Random -Maximum 9999))
+    $linha = (@{ op = $Op; payload = $Payload } | ConvertTo-Json -Depth 6 -Compress)
+    Write-Utf8NoBom -Path $arquivo -Content ($linha + "`n")
+    return $arquivo
+}
+
 function Get-NextPlanNumber {
+    # Caso 2-A do 000134: a numeracao oficial vem do BANCO; o disco e apenas
+    # fallback offline (numero PROVISORIO, confirmado na drenagem da fila).
+    if (-not $env:ALLIA_FROM_API) {
+        try {
+            $resp = Invoke-RestMethod -Method Get -Uri "$(Get-AllIAApiBase)/plans/proximo-numero" -TimeoutSec 3
+            if ($resp.proximo_numero) { return [int]$resp.proximo_numero }
+        } catch { }
+    }
     $all = @(Find-AllPlanFolders)
     if ($all.Count -eq 0) { return 1 }
     $max = [int]((($all | ForEach-Object { [int]$_.Numero }) | Measure-Object -Maximum).Maximum)

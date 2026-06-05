@@ -46,13 +46,14 @@ Definir uma lista objetiva de skills executoras para uma atividade, com base em 
 
 ## Fluxo
 
-1. Ler `C:\codes\AGENTS.md`.
-2. Ler regras do contexto mais especifico envolvido.
-3. Identificar tipo da atividade (`planejamento`, `execucao-tecnica`, `estrutura-contexto`, `git-publicacao`, `chamados-rastreabilidade`).
-4. Eleger skills com `scripts\selecionar-skills.ps1`.
-5. Registrar no plano/atividade a lista final de skills executoras.
-6. Registrar na sessao ativa: skills candidatas, skill executora, skills de apoio e motivo da escolha.
-7. Antes de encerrar a atividade persistente, validar o registro com `C:\codes\skills\core\planner\maintain-activities\scripts\validar-roteamento-obrigatorio.ps1`.
+1. Executar o CHECK DE FRESCOR das skills (plano skills 000133, caso 3-A): `scripts\verificar-frescor-skills.ps1` consulta `GET /skills/sync/status` na API do all_IA (timeout ~500ms); se houver skill alterada depois da ultima sincronizacao banco -> `dist/`, o sincronizador e invocado automaticamente antes de rotear. Backend fora = fallback offline: usa o `dist/` local como esta e registra pendencia em `skills/indices/.sync-pendente`.
+2. Ler `C:\codes\AGENTS.md`.
+3. Ler regras do contexto mais especifico envolvido.
+4. Identificar tipo da atividade (`planejamento`, `execucao-tecnica`, `estrutura-contexto`, `git-publicacao`, `chamados-rastreabilidade`).
+5. Eleger skills com `scripts\selecionar-skills.ps1` (o indice oficial de skills e o BANCO: `GET /skills/index`).
+6. Registrar no plano/atividade a lista final de skills executoras.
+7. Registrar na sessao ativa: skills candidatas, skill executora, skills de apoio e motivo da escolha.
+8. Antes de encerrar a atividade persistente, validar o registro com `C:\codes\skills\core\planner\maintain-activities\scripts\validar-roteamento-obrigatorio.ps1`.
 
 ## Roteamento e fallback (plano 000125)
 
@@ -73,6 +74,7 @@ Definir uma lista objetiva de skills executoras para uma atividade, com base em 
 ## Scripts
 
 1. `scripts/selecionar-skills.ps1`: retorna skills sugeridas por contexto e tipo de atividade.
+2. `scripts/verificar-frescor-skills.ps1`: check de frescor no inicio do prompt (000133) - dispara a sync banco -> dist/ quando defasado; offline registra pendencia e segue com o dist/ local.
 
 
 ## Correlacao Obrigatoria de Skills
